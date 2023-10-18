@@ -28,4 +28,25 @@ export class UsersService {
 
     return this.userRepository.save(user);
   }
+
+  async update(id: string, updateUserDto: any) {
+    const user = await this.userRepository.preload({
+      ...updateUserDto,
+      id,
+    });
+    if (!user) {
+      throw new Error(`User with ID ${id} not found`);
+    } else {
+      return this.userRepository.save(user);
+    }
+  }
+
+  async remove(id: string) {
+    const user = await this.userRepository.findOne({ where: { id } });
+    if (!user) {
+      throw new Error(`User with ID ${id} not found`);
+    } else {
+      return this.userRepository.remove(user);
+    }
+  }
 }
